@@ -56,7 +56,7 @@ for lr in 0.005 0.003 0.01 0.05 0.1 0.2; do
   for dl_weight in 2.0 2.5 3.0 3.5; do
     n_memories=1000
     model="DVC"
-    args="--model $model --batch_size 10 --$lr --loss_T 0.1 --n_memories $n_memories --n_outputs 10 --n_iter 1 --n_seeds 5 $exp_name --dl_weight $dl_weight --subsample 50 --eps_mem_batch 10"
+    args="--model $model --batch_size 10 --lr $lr --loss_T 0.1 --n_memories $n_memories --n_outputs 10 --n_iter 1 --n_seeds 5 $exp_name --dl_weight $dl_weight --subsample 50 --eps_mem_batch 10"
     CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
     n_memories=200
