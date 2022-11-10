@@ -39,50 +39,80 @@ cd ..
 # n_outputs=128,256,512
 # lr=0.05,0.01,0.005,0.001
 # n_iter=1,5
-n_memories=50 # Change for ablation (mem per class)
+n_memories=10 # Change for ablation (mem per class)
 
 # CoPE
 # Last code version acc check for first seed : 20.51% avg acc
 # Note: Use the exact dependencies in README.md to reproduce the results.
-model="prototypical.CoPE"
-args="--model $model --batch_size 10 --lr 0.005 --loss_T 0.05 --p_momentum 0.9 --n_memories $n_memories --n_outputs 256 --n_iter 5 --n_seeds 5 $exp_name"
-$MY_PYTHON "$pyscript" $ds_args $args # Run python file
+# model="prototypical.CoPE"
+# args="--model $model --batch_size 10 --lr 0.005 --loss_T 0.05 --p_momentum 0.9 --n_memories $n_memories --n_outputs 256 --n_iter 5 --n_seeds 5 $exp_name"
+# $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
-# Cope-CE
-model="CoPE_CE"
-args="--model $model --batch_size 10 --lr 0.05 --n_memories $n_memories --n_outputs 10 --n_iter 1 --n_seeds 5 $exp_name"
+# n_memories=3000
+# model="DVC"
+# args="--model $model --batch_size 10 --lr 0.005 --n_memories $n_memories --n_outputs 100 --n_iter 1 --n_seeds 5 $exp_name --dl_weight 4.0 --subsample 50 --eps_mem_batch 10"
+# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
-# iid-offline
-model="finetune"
-args="--n_iter 1 --n_epochs 50 --model $model --lr 0.05 --batch_size 10 --n_outputs 10 --n_seeds 5 --iid yes $exp_name"
+# n_memories=5000
+# model="DVC"
+# args="--model $model --batch_size 10 --lr 0.005 --n_memories $n_memories --n_outputs 100 --n_iter 1 --n_seeds 5 $exp_name --dl_weight 4.0 --subsample 50 --eps_mem_batch 10"
+# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
-# iid-online
-model="finetune"
-args="--n_iter 1 --n_epochs 1 --model $model --lr 0.05 --batch_size 10 --n_outputs 10 --n_seeds 5 --iid yes $exp_name"
+# n_memories=1000
+# model="DVC"
+# args="--model $model --batch_size 10 --lr 0.005 --n_memories $n_memories --n_outputs 100 --n_iter 5 --n_seeds 5 $exp_name --dl_weight 4.0 --subsample 50 --eps_mem_batch 10"
+# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
-# finetune
-model="finetune"
-args="--n_iter 1 --n_epochs 1 --model $model --lr 0.05 --batch_size 10 --n_outputs 10 --n_seeds 5 --iid no $exp_name"
+n_memories=1000
+model="OCD"
+args="--model $model --batch_size 32 --lr 0.05  --n_memories $n_memories --n_outputs 100 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
+CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+
+# n_memories=3000
+# model="OCD"
+# args="--model $model --batch_size 32 --lr 0.05  --n_memories $n_memories --n_outputs 100 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
+# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+
+# n_memories=5000
+# model="OCD"
+# args="--model $model --batch_size 32 --lr 0.05  --n_memories $n_memories --n_outputs 100 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
+# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+
+# # Cope-CE
+# model="CoPE_CE"
+# args="--model $model --batch_size 10 --lr 0.05 --n_memories $n_memories --n_outputs 10 --n_iter 1 --n_seeds 5 $exp_name"
+
+# # iid-offline
+# model="finetune"
+# args="--n_iter 1 --n_epochs 50 --model $model --lr 0.05 --batch_size 10 --n_outputs 10 --n_seeds 5 --iid yes $exp_name"
+
+# # iid-online
+# model="finetune"
+# args="--n_iter 1 --n_epochs 1 --model $model --lr 0.05 --batch_size 10 --n_outputs 10 --n_seeds 5 --iid yes $exp_name"
+
+# # finetune
+# model="finetune"
+# args="--n_iter 1 --n_epochs 1 --model $model --lr 0.05 --batch_size 10 --n_outputs 10 --n_seeds 5 --iid no $exp_name"
 
 # Reservoir
-model="reservoir"
-n_mem_tot=5000
-args="--n_iter 1 --model $model --n_memories $n_mem_tot --lr 0.05 --batch_size 10 --n_outputs 10 --n_seeds 5 $exp_name"
+# model="reservoir"
+# n_mem_tot=5000
+# args="--n_iter 1 --model $model --n_memories $n_mem_tot --lr 0.05 --batch_size 10 --n_outputs 10 --n_seeds 5 $exp_name"
+# $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+# # iCaRL
+# n_mem_tot=5000
+# model="icarl"
+# args="--n_iter 5 --model $model --memory_strength 1 --n_memories $n_mem_tot --lr 0.01 --batch_size 10 --n_outputs 10 --n_seeds 5 ICARL"
 
-# iCaRL
-n_mem_tot=5000
-model="icarl"
-args="--n_iter 5 --model $model --memory_strength 1 --n_memories $n_mem_tot --lr 0.01 --batch_size 10 --n_outputs 10 --n_seeds 5 ICARL"
+# # GEM
+# model="gem"
+# n_mem_task=250 # 20 tasks
+# args="--n_iter 5 --model $model --memory_strength 0.5 --n_memories $n_mem_task --lr 0.05 --batch_size 10 --n_outputs 10 --n_seeds 5 $exp_name"
 
-# GEM
-model="gem"
-n_mem_task=250 # 20 tasks
-args="--n_iter 5 --model $model --memory_strength 0.5 --n_memories $n_mem_task --lr 0.05 --batch_size 10 --n_outputs 10 --n_seeds 5 $exp_name"
-
-# GSS
-model="GSSgreedy"
-n_mem_tot=5000
-args="--model $model --batch_size 10 --lr 0.05 --n_memories 10 --n_sampled_memories $n_mem_tot --n_constraints 10 --memory_strength 10 --n_iter 5 --change_th 0. --subselect 1 --normalize no $exp_name"
+# # GSS
+# model="GSSgreedy"
+# n_mem_tot=5000
+# args="--model $model --batch_size 10 --lr 0.05 --n_memories 10 --n_sampled_memories $n_mem_tot --n_constraints 10 --memory_strength 10 --n_iter 5 --change_th 0. --subselect 1 --normalize no $exp_name"
 
 # MIR
 # See original implementation @ https://github.com/optimass/Maximally_Interfered_Retrieval
@@ -98,17 +128,17 @@ exit
 # n_outputs=256
 # lr=0.05,0.01,0.005,0.001
 # n_iter=1,5
-n_memories=50 # 5k total (50 per class * 100 classes)
+# n_memories=50 # 5k total (50 per class * 100 classes)
 
-# CoPE
-model="prototypical.CoPE"
-args="--model $model --batch_size 10 --lr 0.05 --loss_T 0.05 --p_momentum 0.9 --n_memories $n_memories --n_outputs 256 --n_iter 5 --n_seeds 5 $exp_name"
+# # CoPE
+# model="prototypical.CoPE"
+# args="--model $model --batch_size 10 --lr 0.05 --loss_T 0.05 --p_momentum 0.9 --n_memories $n_memories --n_outputs 256 --n_iter 5 --n_seeds 5 $exp_name"
 
-# S(T_i), for i in (1 to 5) -> Tasks 1,5,10,15,20
-extra_args="--samples_per_task |1,2500,1000|"     # First task has 2500 samples, all the rest 1000
-extra_args="--samples_per_task |5,2500,1000|"     # Fifth task has 2500 samples, all the rest 1000
-extra_args="--samples_per_task |10,2500,1000|"    # Tenth task has 2500 samples, all the rest 1000
-extra_args="--samples_per_task |15,2500,1000|"    # 15th task has 2500 samples, all the rest 1000
-extra_args="--samples_per_task |20,2500,1000|"    # 20th task has 2500 samples, all the rest 1000
+# # S(T_i), for i in (1 to 5) -> Tasks 1,5,10,15,20
+# extra_args="--samples_per_task |1,2500,1000|"     # First task has 2500 samples, all the rest 1000
+# extra_args="--samples_per_task |5,2500,1000|"     # Fifth task has 2500 samples, all the rest 1000
+# extra_args="--samples_per_task |10,2500,1000|"    # Tenth task has 2500 samples, all the rest 1000
+# extra_args="--samples_per_task |15,2500,1000|"    # 15th task has 2500 samples, all the rest 1000
+# extra_args="--samples_per_task |20,2500,1000|"    # 20th task has 2500 samples, all the rest 1000
 
-$MY_PYTHON "$pyscript" $ds_args $extra_args $args # Run python file
+# $MY_PYTHON "$pyscript" $ds_args $extra_args $args # Run python file

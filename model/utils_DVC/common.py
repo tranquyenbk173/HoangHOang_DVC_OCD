@@ -3,7 +3,7 @@
 #
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
-import torch
+
 import math
 import torch.nn as nn
 from torch.nn.functional import relu, avg_pool2d
@@ -155,13 +155,9 @@ class ResNet(nn.Module):
         return x
 
     def forward_DVC(self, x):
-        try:
-            x = x.view(-1, 3, 32, 32)
-        except:
-            x = x.view(-1, 1, 28, 28)
         out = self.features(x)
         logits = self.logits(out)
-        return logits, out
+        return logits,
     
 class QNet(BaseModule):
     def __init__(self,
@@ -195,12 +191,9 @@ class DVCNet(BaseModule):
             self.qnet = QNet(n_units=n_units,
                              n_classes=n_classes)
 
-    def forward(self, x, xt=None):
+    def forward(self, x, xt):
         size = x.size(0)
-        if xt != None:
-            xx = torch.cat((x, xt))
-        else:
-            xx = x
+        xx = torch.cat((x, xt))
         zz,fea = self.backbone.forward_DVC(xx)
         z = zz[0:size]
         zt = zz[size:]
@@ -210,13 +203,9 @@ class DVCNet(BaseModule):
 
         if not self.has_mi_qnet:
             return z, zt, None
-        
-        if xt != None:
-            zcat = torch.cat((z, zt), dim=1)
-            zzt = self.qnet(zcat)
-        else:
-            zcat = z
-            zzt = None
+
+        zcat = torch.cat((z, zt), dim=1)
+        zzt = self.qnet(zcat)
 
         return z, zt, zzt,[torch.sum(torch.abs(fea_z), 1).reshape(-1, 1),torch.sum(torch.abs(fea_zt), 1).reshape(-1, 1)]
 

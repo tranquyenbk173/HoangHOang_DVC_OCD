@@ -11,7 +11,8 @@ import torch
 from metrics.metrics import confusion_matrix
 import metrics.plot as plot
 from metrics.utils import createdirs
-from model.common import MLP, ResNet18
+from model.common import MLP, ResNet18, Reduced_ResNet18_DVC
+from model.utils_OCD.resnet18_OCD import resnet18
 from model.prototypical.mem_scheme import MemoryScheme
 from model.prototypical.loss_scheme import PPPloss
 from model.prototypical.p_scheme import PrototypeScheme
@@ -54,7 +55,7 @@ parser.add_argument('--uid', default=None, type=str, help='id for the seed runs.
 
 # model parameters
 parser.add_argument('--model', type=str, default='prototypical.CoPE',
-                    choices=['prototypical.CoPE', 'finetune', 'reservoir', 'CoPE_CE', 'gem', 'icarl', 'GSSgreedy'],
+                    choices=['prototypical.CoPE', 'finetune', 'reservoir', 'CoPE_CE', 'gem', 'icarl', 'GSSgreedy', 'DVC', 'OCD'],
                     help='model to train.')
 parser.add_argument('--n_hiddens', type=int, default=100,
                     help='number of hidden neurons at each layer')
@@ -119,6 +120,19 @@ parser.add_argument('--n_constraints', type=int, default=-1,
 parser.add_argument('--change_th', type=float, default=0.0,
                     help='gradients similarity change threshold for re-estimating the constraints')
 
+# DVC
+parser.add_argument('--dl_weight', type=float, default=2.0, help = '2.0 for cifar10, 4.0 for cifar 100') #2.0 for cifar10, 4.0 for cifar 100
+parser.add_argument('--subsample', dest='subsample', default=50,
+                        type=int,
+                        help='Number of subsample to perform MIR(default: %(default)s)')
+parser.add_argument('--eps_mem_batch', dest='eps_mem_batch', default=10,
+                        type=int,
+                        help='Episode memory per batch (default: %(default)s)')
+
+#OCD
+parser.add_argument('--Bernoulli_probability', type=float, default=0.2)
+parser.add_argument('--ER_weight', type=float, default=0.5)
+parser.add_argument('--minibatch_size', type=int, default=32)
 
 # continuum iterator #########################################################
 def load_datasets(args):
@@ -343,7 +357,7 @@ def life_experience(model, continuum, x_te, args):
                 model.mem_update_scheme.print_mem_stats()
             if hasattr(model, "lossFunc"):
                 model.lossFunc.tracker['log_it'].append(i)  # For loss tracking history
-            model.log = True
+            model.log = False #True
             if args.visual and args.visual_chkpt == 'log':
                 plot.plot_featspace(args.visual, continuum.data, x_te, model, current_task, i,
                                     save_img_path=args.imgname)
@@ -382,10 +396,17 @@ def life_experience(model, continuum, x_te, args):
 
 def get_model(args, n_inputs, n_outputs):
     nl, nh = args.n_layers, args.n_hiddens
-    if args.is_cifar:
-        net = ResNet18(n_outputs, bias=args.bias)
+    if args.model == 'DVC':
+        net = Reduced_ResNet18_DVC(n_outputs, nf=20, bias=True)
+    elif args.model == 'OCD':
+        net = resnet18(nclasses=n_outputs)
     else:
-        net = MLP([n_inputs] + [nh] * nl + [n_outputs])
+        if args.is_cifar:
+            net = ResNet18(n_outputs, bias=args.bias)
+        else:
+            net = MLP([n_inputs] + [nh] * nl + [n_outputs])
+          
+        
     return net
 
 

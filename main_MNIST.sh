@@ -45,9 +45,14 @@ n_memories=200 # Change for ablation (mem per class): 10,20,50,100,150,200
 # CoPE
 # Last code version acc check for 5 seeds: 94.110+-0.764 avg acc
 # Note: Use the exact dependencies in README.md to reproduce the results.
-model="prototypical.CoPE"
-args="--model $model --batch_size 10 --lr 0.01 --loss_T 0.1 --p_momentum 0.99 --n_memories $n_memories --n_outputs 100 --n_iter 1 --n_seeds 5 $exp_name"
-$MY_PYTHON "$pyscript" $ds_args $args # Run python file
+# model="prototypical.CoPE"
+# args="--model $model --batch_size 10 --lr 0.01 --loss_T 0.1 --p_momentum 0.99 --n_memories $n_memories --n_outputs 100 --n_iter 1 --n_seeds 5 $exp_name"
+# $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+
+n_memories=200
+model="DVC"
+args="--model $model --batch_size 10 --lr 0.01 --n_memories $n_memories --n_outputs 10 --n_iter 1 --n_seeds 5 $exp_name --dl_weight 2.0 --subsample 50 --eps_mem_batch 10"
+CUDA_VISIBLE_DEVICES=0 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
 # Cope-CE
 model="CoPE_CE"
@@ -90,26 +95,3 @@ args="--model $model --batch_size 10 --lr 0.05 --n_memories 10 --n_sampled_memor
 # Adapted to match settings in this paper
 
 exit
-
-##########################################################
-# IMBALANCED method configs
-##########################################################
-# Gridsearch over (pick best)
-# Same hyperparams as low-capacity setups in Appendix.
-# n_outputs=16,32,64
-# lr=0.05,0.01,0.005,0.001 -> Pick best for each S(T_i)
-# n_iter=1,5
-n_memories=30 # 300 total
-
-# CoPE
-model="prototypical.CoPE"
-args="--model $model --batch_size 10 --lr 0.05 --loss_T 0.1 --p_momentum 0.99 --n_memories $n_memories --n_outputs 64 --n_iter 5 --n_seeds 5 $exp_name"
-
-# S(T_i), for i in (1 to 5) -> Tasks 1 to 5
-extra_args="--samples_per_task |1,2000,200|" # First task has 2000 samples, all the rest 200
-extra_args="--samples_per_task |2,2000,200|"
-extra_args="--samples_per_task |3,2000,200|"
-extra_args="--samples_per_task |4,2000,200|"
-extra_args="--samples_per_task |5,2000,200|"
-
-$MY_PYTHON "$pyscript" $ds_args $extra_args $args # Run python file

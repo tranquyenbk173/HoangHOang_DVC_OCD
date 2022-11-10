@@ -60,6 +60,7 @@ class PPPloss(object):
 
         # All prototypes
         p_x, p_y = self.net.get_all_prototypes()
+        # print(len(p_x))
 
         # Init
         loss = None
@@ -136,6 +137,8 @@ class PPPloss(object):
         expPneg = (Pneg[:-1] + Pneg[-1].unsqueeze(0)) / 2  # Expectation pseudo/prototype
         lnPneg_k = expPneg.mul_(-1).add_(1).log_()  # log( (1 - Pk))
         lnPneg = lnPneg_k.sum()  # Sum over (pseudo-prototypes), and instances
+        
+        print(xc.shape, pc.shape, xk.shape, pk.shape)
 
         if self.net.log:
             print(" + (#k) {:.1f}/({:.1f} + {:.1f})".format(float(pc_terms.mean().item()),
