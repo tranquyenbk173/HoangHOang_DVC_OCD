@@ -52,36 +52,47 @@ n_memories=100 # Change for ablation (mem per class): 10,20,50,100,150,200
 # model="prototypical.CoPE"
 # args="--model $model --batch_size 10 --lr 0.005 --loss_T 0.1 --p_momentum 0.99 --n_memories $n_memories --n_outputs 256 --n_iter 1 --n_seeds 5 $exp_name"
 # CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+for lr in 0.005 0.003 0.01 0.05 0.1 0.2; do 
+  for dl_weight in 2.0 2.5 3.0 3.5; do
+    n_memories=1000
+    model="DVC"
+    args="--model $model --batch_size 10 --$lr --loss_T 0.1 --n_memories $n_memories --n_outputs 10 --n_iter 1 --n_seeds 5 $exp_name --dl_weight $dl_weight --subsample 50 --eps_mem_batch 10"
+    CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
-# n_memories=1000
-# model="DVC"
-# args="--model $model --batch_size 10 --lr 0.005 --loss_T 0.1 --n_memories $n_memories --n_outputs 10 --n_iter 1 --n_seeds 5 $exp_name --dl_weight 2.5 --subsample 50 --eps_mem_batch 10"
-# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+    n_memories=200
+    model="DVC"
+    args="--model $model --batch_size 10 --lr $lr --loss_T 0.1 --n_memories $n_memories --n_outputs 10 --n_iter 1 --n_seeds 5 $exp_name --dl_weight $dl_weight --subsample 50 --eps_mem_batch 10"
+    CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
-# n_memories=200
-# model="DVC"
-# args="--model $model --batch_size 10 --lr 0.005 --loss_T 0.1 --n_memories $n_memories --n_outputs 10 --n_iter 1 --n_seeds 5 $exp_name --dl_weight 2.0 --subsample 50 --eps_mem_batch 10"
-# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+    n_memories=500
+    model="DVC"
+    args="--model $model --batch_size 10 --lr $lr --loss_T 0.1 --n_memories $n_memories --n_outputs 10 --n_iter 1 --n_seeds 5 $exp_name --dl_weight $dl_weight --subsample 50 --eps_mem_batch 10"
+    CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+    
+   done
+ done 
+ 
+ 
+for lr in 0.01 0.05 0.1; do
+  for ER_weight in 0.3 0.5 0.8 1; do
 
-# n_memories=500
-# model="DVC"
-# args="--model $model --batch_size 10 --lr 0.005 --loss_T 0.1 --n_memories $n_memories --n_outputs 10 --n_iter 1 --n_seeds 5 $exp_name --dl_weight 2.0 --subsample 50 --eps_mem_batch 10"
-# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+    n_memories=500
+    model="OCD"
+    args="--model $model --batch_size 32 --lr 0.05  --n_memories $n_memories --n_outputs 10 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
+    CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
-# n_memories=500
-# model="OCD"
-# args="--model $model --batch_size 32 --lr 0.05  --n_memories $n_memories --n_outputs 10 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
-# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+    n_memories=200
+    model="OCD"
+    args="--model $model --batch_size 32 --lr 0.05  --n_memories $n_memories --n_outputs 10 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
+    CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
-n_memories=200
-model="OCD"
-args="--model $model --batch_size 32 --lr 0.05  --n_memories $n_memories --n_outputs 10 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
-CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
-
-# n_memories=1000
-# model="OCD"
-# args="--model $model --batch_size 32 --lr 0.1  --n_memories $n_memories --n_outputs 10 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
-# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+    n_memories=1000
+    model="OCD"
+    args="--model $model --batch_size 32 --lr 0.1  --n_memories $n_memories --n_outputs 10 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
+    CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+    
+  done
+done
 
 
 #_____________________________________________________________________
