@@ -48,35 +48,47 @@ n_memories=10 # Change for ablation (mem per class)
 # args="--model $model --batch_size 10 --lr 0.005 --loss_T 0.05 --p_momentum 0.9 --n_memories $n_memories --n_outputs 256 --n_iter 5 --n_seeds 5 $exp_name"
 # $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
-# n_memories=3000
-# model="DVC"
-# args="--model $model --batch_size 10 --lr 0.005 --n_memories $n_memories --n_outputs 100 --n_iter 1 --n_seeds 5 $exp_name --dl_weight 4.0 --subsample 50 --eps_mem_batch 10"
-# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
-# n_memories=5000
-# model="DVC"
-# args="--model $model --batch_size 10 --lr 0.005 --n_memories $n_memories --n_outputs 100 --n_iter 1 --n_seeds 5 $exp_name --dl_weight 4.0 --subsample 50 --eps_mem_batch 10"
-# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+for lr in 0.005 0.01 0.05 0.1 0.2; do
+  for dl_weight in 3.5 4.0 4.5 5.0; do
 
-# n_memories=1000
-# model="DVC"
-# args="--model $model --batch_size 10 --lr 0.005 --n_memories $n_memories --n_outputs 100 --n_iter 5 --n_seeds 5 $exp_name --dl_weight 4.0 --subsample 50 --eps_mem_batch 10"
-# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+    n_memories=3000
+    model="DVC"
+    args="--model $model --batch_size 10 --lr $lr --n_memories $n_memories --n_outputs 100 --n_iter 1 --n_seeds 5 $exp_name --dl_weight $dl_weight --subsample 50 --eps_mem_batch 10"
+    CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
-n_memories=1000
-model="OCD"
-args="--model $model --batch_size 32 --lr 0.05  --n_memories $n_memories --n_outputs 100 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
-CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+    n_memories=5000
+    model="DVC"
+    args="--model $model --batch_size 10 --lr $lr --n_memories $n_memories --n_outputs 100 --n_iter 1 --n_seeds 5 $exp_name --dl_weight $dl_weight --subsample 50 --eps_mem_batch 10"
+    CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
-# n_memories=3000
-# model="OCD"
-# args="--model $model --batch_size 32 --lr 0.05  --n_memories $n_memories --n_outputs 100 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
-# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+    n_memories=1000
+    model="DVC"
+    args="--model $model --batch_size 10 --lr $lr --n_memories $n_memories --n_outputs 100 --n_iter 5 --n_seeds 5 $exp_name --dl_weight $dl_weight --subsample 50 --eps_mem_batch 10"
+    CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+    
+  done
+done
 
-# n_memories=5000
-# model="OCD"
-# args="--model $model --batch_size 32 --lr 0.05  --n_memories $n_memories --n_outputs 100 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
-# CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+for lr in 0.01 0.05 0.1 0.2; do
+  for ER_weight in 0.3 0.5 0.8; do
+    n_memories=1000
+    model="OCD"
+    args="--model $model --batch_size 32 --lr $lr  --n_memories $n_memories --n_outputs 100 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight $ER_weight"
+    CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+
+    n_memories=3000
+    model="OCD"
+    args="--model $model --batch_size 32 --lr $lr  --n_memories $n_memories --n_outputs 100 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight $ER_weight"
+    CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+
+    n_memories=5000
+    model="OCD"
+    args="--model $model --batch_size 32 --lr $lr  --n_memories $n_memories --n_outputs 100 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight $ER_weight"
+    CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
+    
+  done
+done
 
 # # Cope-CE
 # model="CoPE_CE"
