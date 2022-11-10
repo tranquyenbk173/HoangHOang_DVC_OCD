@@ -357,7 +357,7 @@ def life_experience(model, continuum, x_te, args):
                 model.mem_update_scheme.print_mem_stats()
             if hasattr(model, "lossFunc"):
                 model.lossFunc.tracker['log_it'].append(i)  # For loss tracking history
-            model.log = False #True
+            model.log = True
             if args.visual and args.visual_chkpt == 'log':
                 plot.plot_featspace(args.visual, continuum.data, x_te, model, current_task, i,
                                     save_img_path=args.imgname)
