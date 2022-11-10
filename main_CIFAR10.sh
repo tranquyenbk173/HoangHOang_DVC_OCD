@@ -78,17 +78,17 @@ for lr in 0.01 0.05 0.1; do
 
     n_memories=500
     model="OCD"
-    args="--model $model --batch_size 32 --lr 0.05  --n_memories $n_memories --n_outputs 10 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
+    args="--model $model --batch_size 32 --lr $lr  --n_memories $n_memories --n_outputs 10 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight $ER_weight"
     CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
     n_memories=200
     model="OCD"
-    args="--model $model --batch_size 32 --lr 0.05  --n_memories $n_memories --n_outputs 10 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
+    args="--model $model --batch_size 32 --lr $lr  --n_memories $n_memories --n_outputs 10 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight $ER_weight"
     CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
 
     n_memories=1000
     model="OCD"
-    args="--model $model --batch_size 32 --lr 0.1  --n_memories $n_memories --n_outputs 10 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight 0.5"
+    args="--model $model --batch_size 32 --lr $lr  --n_memories $n_memories --n_outputs 10 --n_iter 5 --n_seeds 5 $exp_name --minibatch_size 32 --Bernoulli_probability 0.2 --ER_weight $ER_weight"
     CUDA_VISIBLE_DEVICES=1 $MY_PYTHON "$pyscript" $ds_args $args # Run python file
     
   done
